@@ -6,9 +6,19 @@ class ProductsController < ApplicationController
         render json: @products
     end
 
+    
     def show
         product = Product.find(params[:id])
         render(json: { product: product })
+    end
+
+    def create
+        @product = Product.new(product_params)
+        if @product.save
+          render json: @product, status: :created, location: @product
+        else
+          render json: @product.errors, status: :unprocessable_entity
+        end
     end
 
     def destroy
@@ -22,7 +32,7 @@ class ProductsController < ApplicationController
 
     private 
 
-    def tweet_params
-        params.require(:product).permit(:name, :description, :price)
+    def product_params
+        params.require(:product).permit(:name, :description, :price, :img)
     end
 end
